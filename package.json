@@ -1,0 +1,26 @@
+{
+  "name": "reviewsapi",
+  "version": "1.0.0",
+  "description": "reviews api for SDC",
+  "main": "index.js",
+  "scripts": {
+    "test": "test",
+    "start": "nodemon server/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Team-BAJA-BLAST-BOYS/ReviewsAPI.git"
+  },
+  "author": "Danny Wong",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Team-BAJA-BLAST-BOYS/ReviewsAPI/issues"
+  },
+  "homepage": "https://github.com/Team-BAJA-BLAST-BOYS/ReviewsAPI#readme",
+  "dependencies": {
+    "express": "^4.17.3",
+    "express-promise-router": "^4.1.1",
+    "mongoose": "^6.3.0",
+    "pg": "^8.7.3"
+  }
+}
