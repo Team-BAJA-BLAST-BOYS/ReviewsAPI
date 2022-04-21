@@ -13,9 +13,11 @@ CREATE DATABASE reviews2;
 --
 -- ---
 
-DROP TABLE IF EXISTS review CASCADE;
+\c reviews2
 
-CREATE TABLE review (
+DROP TABLE IF EXISTS reviews CASCADE;
+
+CREATE TABLE reviews (
   id SERIAL NOT NULL UNIQUE,
   product_id INTEGER NOT NULL,
   rating INTEGER NOT NULL,
@@ -26,7 +28,7 @@ CREATE TABLE review (
   reported BOOLEAN NOT NULL,
   reviewer_name VARCHAR(255) NOT NULL,
   reviewer_email VARCHAR(255) NOT NULL,
-  response VARCHAR(1000) NOT NULL,
+  response VARCHAR(1000) NULL,
   helpfulness INTEGER NOT NULL,
   PRIMARY KEY (id)
 );
@@ -36,9 +38,9 @@ CREATE TABLE review (
 --
 -- ---
 
-DROP TABLE IF EXISTS characteristics CASCADE;
+DROP TABLE IF EXISTS characteristics_csv CASCADE;
 
-CREATE TABLE characteristics (
+CREATE TABLE characteristics_csv (
   id SERIAL NOT NULL UNIQUE,
   product_id INTEGER NOT NULL,
   name VARCHAR(255) NOT NULL,
@@ -54,7 +56,7 @@ DROP TABLE IF EXISTS characteristics_reviews;
 
 CREATE TABLE characteristics_reviews (
   id SERIAL NOT NULL,
-  characteristic_id INTEGER NOT NULL REFERENCES characteristics (id),
+  characteristic_id INTEGER NOT NULL REFERENCES characteristics_csv (id),
   review_id INTEGER NOT NULL,
   value INTEGER NOT NULL,
   PRIMARY KEY (id)
@@ -69,11 +71,23 @@ DROP TABLE IF EXISTS photos;
 
 CREATE TABLE photos (
   id SERIAL NOT NULL,
-  review_id INTEGER NOT NULL REFERENCES review (id),
+  review_id INTEGER NOT NULL REFERENCES reviews (id),
   url VARCHAR(255) NOT NULL,
   PRIMARY KEY (id)
 );
 
+DROP TABLE IF EXISTS characteristics CASCADE;
+
+CREATE TABLE characteristics (
+  id SERIAL NOT NULL UNIQUE,
+  product_id INTEGER NOT NULL,
+  name VARCHAR(255) NOT NULL,
+  value INTEGER NOT NULL,
+  PRIMARY KEY (id)
+);
+
+GRANT ALL PRIVILEGES ON DATABASE reviews2 to silvergrace;
+GRANT ALL PRIVILEGES ON DATABASE reviews2 to postgres;
 -- ---
 -- Foreign Keys
 -- ---

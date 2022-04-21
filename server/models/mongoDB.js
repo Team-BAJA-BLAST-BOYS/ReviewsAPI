@@ -1,4 +1,3 @@
-
 const mongoose = require('mongoose');
 mongoose.connect('mongodb://localhost:27017/reviews');
 
@@ -41,6 +40,7 @@ const reviewSchema = new mongoose.Schema({
   reviewer_email: String,
   response: String,
   helpfulness: Number,
+  photos: Array,
 });
 
 const metaData = mongoose.model('MetaData', metaDataSchema);
