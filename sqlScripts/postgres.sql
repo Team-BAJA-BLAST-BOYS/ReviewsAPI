@@ -1,6 +1,6 @@
+
 DROP DATABASE IF EXISTS reviews;
 CREATE DATABASE reviews;
-
 -- ---
 -- Globals
 -- ---
@@ -13,9 +13,9 @@ CREATE DATABASE reviews;
 --
 -- ---
 
-DROP TABLE IF EXISTS review CASCADE;
+DROP TABLE IF EXISTS reviews CASCADE;
 
-CREATE TABLE review (
+CREATE TABLE reviews (
   id SERIAL NOT NULL UNIQUE,
   product_id INTEGER NOT NULL,
   rating INTEGER NOT NULL,
@@ -26,22 +26,36 @@ CREATE TABLE review (
   reported BOOLEAN NOT NULL,
   reviewer_name VARCHAR(255) NOT NULL,
   reviewer_email VARCHAR(255) NOT NULL,
-  response VARCHAR(1000) NOT NULL,
+  response VARCHAR(1000) NULL,
   helpfulness INTEGER NOT NULL,
   PRIMARY KEY (id)
 );
 
 -- ---
--- Table 'Characteristics'
+-- Table 'characteristics'
 --
 -- ---
 
-DROP TABLE IF EXISTS characteristics CASCADE;
+DROP TABLE IF EXISTS characteristics_csv CASCADE;
 
-CREATE TABLE characteristics (
-  id SERIAL NOT NULL,
+CREATE TABLE characteristics_csv (
+  id SERIAL NOT NULL UNIQUE,
   product_id INTEGER NOT NULL,
   name VARCHAR(255) NOT NULL,
+  PRIMARY KEY (id)
+);
+
+-- ---
+-- Table 'Characteristics-Reviews'
+--
+-- ---
+
+DROP TABLE IF EXISTS characteristics_reviews;
+
+CREATE TABLE characteristics_reviews (
+  id SERIAL NOT NULL,
+  characteristic_id INTEGER NOT NULL REFERENCES characteristics_csv (id),
+  review_id INTEGER NOT NULL,
   value INTEGER NOT NULL,
   PRIMARY KEY (id)
 );
@@ -54,18 +68,35 @@ CREATE TABLE characteristics (
 DROP TABLE IF EXISTS photos;
 
 CREATE TABLE photos (
-  review_id INTEGER NOT NULL,
   id SERIAL NOT NULL,
+  review_id INTEGER NOT NULL REFERENCES reviews (id),
   url VARCHAR(255) NOT NULL,
   PRIMARY KEY (id)
 );
+
+DROP TABLE IF EXISTS characteristics CASCADE;
+
+CREATE TABLE characteristics (
+  id SERIAL NOT NULL UNIQUE,
+  product_id INTEGER NOT NULL,
+  name VARCHAR(255) NOT NULL,
+  value INTEGER NOT NULL,
+  PRIMARY KEY (id)
+);
+
+GRANT ALL PRIVILEGES ON DATABASE reviews2 to silvergrace;
+GRANT ALL PRIVILEGES ON DATABASE reviews2 to postgres;
+
+CREATE INDEX idx_product_id ON reviews(product_id);
+CREATE INDEX idx_chara_prod_id ON characteristics(product_id);
 
 -- ---
 -- Foreign Keys
 -- ---
 
--- ALTER TABLE characteristics ADD FOREIGN KEY (product_id) REFERENCES review (product_id);
-ALTER TABLE photos ADD FOREIGN KEY (review_id) REFERENCES review (review_id);
+-- ALTER TABLE Characteristics ADD FOREIGN KEY (product_id) REFERENCES Review (product_id);
+-- ALTER TABLE Characteristics-Reviews ADD FOREIGN KEY (characteristic_id) REFERENCES Characteristics (id);
+-- ALTER TABLE Photos ADD FOREIGN KEY (review_id) REFERENCES Review (review_id);
 
 -- ---
 -- Table Properties
@@ -85,5 +116,3 @@ ALTER TABLE photos ADD FOREIGN KEY (review_id) REFERENCES review (review_id);
 -- ('','','','');
 -- INSERT INTO Photos (review_id,id,url) VALUES
 -- ('','','');
--- INSERT INTO public.review (product_id,review_id,rating,summary,recommend,response,body,date,reviewer_name,helpfulness,reported) VALUES
--- ('1','2','3','asdf',false,'dsadsa','dsadsa','2016-06-22 19:10:25-07','danny','5', false);

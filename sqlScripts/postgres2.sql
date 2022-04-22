@@ -88,6 +88,10 @@ CREATE TABLE characteristics (
 
 GRANT ALL PRIVILEGES ON DATABASE reviews2 to silvergrace;
 GRANT ALL PRIVILEGES ON DATABASE reviews2 to postgres;
+
+CREATE INDEX idx_product_id ON reviews(product_id);
+CREATE INDEX idx_chara_prod_id ON characteristics(product_id);
+
 -- ---
 -- Foreign Keys
 -- ---

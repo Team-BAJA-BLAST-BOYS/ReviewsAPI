@@ -1,4 +1,4 @@
-const { Client } = require('pg');
+const { Pool } = require('pg');
 
 const credentials = {
   user: 'postgres',
@@ -8,11 +8,23 @@ const credentials = {
   port: 5432,
 };
 
-const client = new Client(credentials);
+const pool = new Pool(credentials);
 
-client.query('SELECT * FROM reviews WHERE product_id=2', (err, res) => {
-  console.log(err, res)
-  client.end()
-})
+pool.connect();
 
-module.exports = client;
+module.exports = {
+  getReviews: (product_id) => {
+    return new Promise((resolve, reject) => {
+      pool.query(`SELECT id, product_id, rating, date, summary, body, recommend,reviewer_name, reviewer_email, response, helpfulness, photos FROM reviews WHERE product_id=${product_id} AND reported=false ORDER BY id`, (err, res) => {
+        if (err) {
+          reject(err);
+        }
+        resolve(res);
+      });;
+    })
+  },
+  getMeta: () => {},
+  postReview: () => {},
+  putHelpful: () => {},
+  putReport: () => {},
+}
