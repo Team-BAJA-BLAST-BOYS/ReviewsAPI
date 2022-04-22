@@ -112,3 +112,20 @@ SELECT
 				GROUP BY rating
 			) a
 	) as ratings_count;
+
+-- returns # of recommended as a json object labeled recommended
+SELECT
+	json_object_agg(recc_count.recommend, recc_count.count) as recommended
+	FROM (
+		SELECT
+			recommend,
+			count
+			FROM (
+				SELECT
+					recommend,
+					count(recommend) AS count
+				FROM reviews
+				WHERE product_id=2
+				GROUP BY recommend
+			) a
+	) as recc_count;

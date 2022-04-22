@@ -70,6 +70,7 @@ DROP TABLE IF EXISTS characteristics CASCADE;
 CREATE TABLE characteristics (
   id SERIAL NOT NULL UNIQUE,
   product_id INTEGER NOT NULL,
+  characteristic_id INTEGER NOT NULL,
   name VARCHAR(255) NOT NULL,
   value INTEGER NOT NULL,
   PRIMARY KEY (id)

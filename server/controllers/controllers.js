@@ -7,7 +7,7 @@ module.exports = {
   },
   getMeta: async (req, res) => {
     const data = await psql.getMeta(req.query.product_id)
-    res.send(data.rows[0]);
+    res.send(data.rows[0].metadata);
   },
   postReview: (req, res) => {
     res.end(psql.postReview);
