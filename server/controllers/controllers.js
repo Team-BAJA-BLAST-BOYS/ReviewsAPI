@@ -1,12 +1,13 @@
 const psql = require('../models/postgresDB');
 
 module.exports = {
-  getReviews: (req, res) => {
-    psql.getReviews(req.query.product_id)
-      .then((results) => res.send(results.rows));
+  getReviews: async (req, res) => {
+    const data = await psql.getReviews(req.query.product_id);
+    res.send(data.rows);
   },
-  getMeta: (req, res) => {
-    res.end(psql.getMeta);
+  getMeta: async (req, res) => {
+    const data = await psql.getMeta(req.query.product_id)
+    res.send(data.rows[0]);
   },
   postReview: (req, res) => {
     res.end(psql.postReview);

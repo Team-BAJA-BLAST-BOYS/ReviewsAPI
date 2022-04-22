@@ -1,12 +1,5 @@
-
 DROP DATABASE IF EXISTS reviews2;
 CREATE DATABASE reviews2;
--- ---
--- Globals
--- ---
-
--- SET SQL_MODE=NO_AUTO_VALUE_ON_ZERO;
--- SET FOREIGN_KEY_CHECKS=0;
 
 -- ---
 -- Table 'Review'
@@ -21,7 +14,7 @@ CREATE TABLE reviews (
   id SERIAL NOT NULL UNIQUE,
   product_id INTEGER NOT NULL,
   rating INTEGER NOT NULL,
-  date VARCHAR(32) NOT NULL,
+  date BIGINT NOT NULL,
   summary VARCHAR(255) NULL,
   body VARCHAR(1000) NOT NULL,
   recommend BOOLEAN NOT NULL,
@@ -86,35 +79,5 @@ CREATE TABLE characteristics (
   PRIMARY KEY (id)
 );
 
-GRANT ALL PRIVILEGES ON DATABASE reviews2 to silvergrace;
-GRANT ALL PRIVILEGES ON DATABASE reviews2 to postgres;
-
 CREATE INDEX idx_product_id ON reviews(product_id);
 CREATE INDEX idx_chara_prod_id ON characteristics(product_id);
-
--- ---
--- Foreign Keys
--- ---
-
--- ALTER TABLE Characteristics ADD FOREIGN KEY (product_id) REFERENCES Review (product_id);
--- ALTER TABLE Characteristics-Reviews ADD FOREIGN KEY (characteristic_id) REFERENCES Characteristics (id);
--- ALTER TABLE Photos ADD FOREIGN KEY (review_id) REFERENCES Review (review_id);
-
--- ---
--- Table Properties
--- ---
-
--- ALTER TABLE Review ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
--- ALTER TABLE Characteristics ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
--- ALTER TABLE Photos ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
-
--- ---
--- Test Data
--- ---
-
--- INSERT INTO Review (product_id,review_id,rating,summary,recommend,response,body,date,reviewer_name,helpfulness,reported) VALUES
--- ('','','','','','','','','','','');
--- INSERT INTO Characteristics (id,product_id,name,value) VALUES
--- ('','','','');
--- INSERT INTO Photos (review_id,id,url) VALUES
--- ('','','');
