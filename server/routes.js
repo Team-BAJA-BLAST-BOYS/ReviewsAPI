@@ -4,7 +4,7 @@ const controllers = require('./controllers/controllers');
 Routers.get('/', controllers.getReviews);
 Routers.get('/meta', controllers.getMeta);
 Routers.post('/', controllers.getReviews);
-Routers.put('/:review_id/helpful', controllers.getReviews);
-Routers.put('/:review_id/helpful', controllers.getReviews);
+Routers.put('/:review_id/helpful', controllers.putHelpful);
+Routers.put('/:review_id/report', controllers.putReport);
 
 module.exports = Routers;

@@ -9,13 +9,15 @@ module.exports = {
     const data = await psql.getMeta(req.query.product_id)
     res.send(data.rows[0].metadata);
   },
-  postReview: (req, res) => {
-    res.end(psql.postReview);
+  postReview: async (req, res) => {
+    res.status(201).end(await psql.postReview(req.body));
   },
-  putHelpful: (req, res) => {
-    res.end(psql.putHelpful);
+  putHelpful: async (req, res) => {
+    const result = await psql.putHelpful(req.params.review_id);
+    res.end(result);
   },
-  putReport: (req, res) => {
-    res.end(psql.putReport);
+  putReport: async (req, res) => {
+    const result = await psql.putReport(req.params.review_id);
+    res.end(result);
   },
 };

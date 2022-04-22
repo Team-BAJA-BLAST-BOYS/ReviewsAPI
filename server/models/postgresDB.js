@@ -33,52 +33,79 @@ module.exports = {
     ORDER BY id`, [product_id]);
   },
   getMeta: async (product_id) => {
-    return await pool.query(`
-    SELECT
-      json_build_object(
-        'product_id', (SELECT product_id FROM reviews WHERE product_id=$1 GROUP BY product_id),
-        'ratings', (SELECT json_object_agg(rating, count) FROM (
-        SELECT
-          rating,
-          count
-        FROM (
+    try {
+      const result = await pool.query(`
+      SELECT
+        json_build_object(
+          'product_id', (SELECT product_id FROM reviews WHERE product_id=$1 GROUP BY product_id),
+          'ratings', (SELECT json_object_agg(rating, count) FROM (
           SELECT
             rating,
-            count(rating) AS count
-          FROM reviews
-          WHERE product_id=$1
-          GROUP BY rating
-        ) a
-    ) as ratings_count),
-      'recommended', (SELECT json_object_agg(recommend, count) FROM (
-          SELECT
-            recommend,
             count
           FROM (
             SELECT
-              recommend,
-              count(recommend) AS count
+              rating,
+              count(rating) AS count
             FROM reviews
             WHERE product_id=$1
-            GROUP BY recommend
+            GROUP BY rating
           ) a
-      ) as recc_count),
-      'characteristics', (SELECT json_object_agg(name, value) FROM (
-          SELECT
-            name,
-            json_build_object('id', characteristic_id, 'value', avg) as value
-          FROM (SELECT
-            name,
-            characteristic_id,
-            AVG(value) as avg
-            FROM characteristics
-            WHERE product_id=$1
-            GROUP BY name, characteristic_id) AS averages
-          GROUP BY name, characteristic_id, avg
-          ORDER BY characteristic_id
-        ) as char_averages)) AS metadata;`, [product_id]);
+      ) as ratings_count),
+        'recommended', (SELECT json_object_agg(recommend, count) FROM (
+            SELECT
+              recommend,
+              count
+            FROM (
+              SELECT
+                recommend,
+                count(recommend) AS count
+              FROM reviews
+              WHERE product_id=$1
+              GROUP BY recommend
+            ) a
+        ) as recc_count),
+        'characteristics', (SELECT json_object_agg(name, value) FROM (
+            SELECT
+              name,
+              json_build_object('id', characteristic_id, 'value', avg) as value
+            FROM (SELECT
+              name,
+              characteristic_id,
+              AVG(value) as avg
+              FROM characteristics
+              WHERE product_id=$1
+              GROUP BY name, characteristic_id) AS averages
+            GROUP BY name, characteristic_id, avg
+            ORDER BY characteristic_id
+          ) as char_averages)) AS metadata;`, [product_id]);
+        return result;
+    } catch (error) {
+      return error;
+    }
   },
-  postReview: () => {},
-  putHelpful: () => {},
-  putReport: () => {},
+  postReview: async (review) => {
+
+  },
+  putHelpful: async (review_id) => {
+    try {
+      await pool.query(`
+        UPDATE reviews
+        SET helpfulness = helpfulness + 1
+        WHERE id=$1;`, [review_id]);
+      return 'Helpfulness successfully updated';
+    } catch (error) {
+      return error;
+    }
+  },
+  putReport: async (review_id) => {
+    try {
+      await pool.query(`
+      UPDATE reviews
+      SET reported = NOT reported
+      WHERE id=$1;`, [review_id]);
+      return 'Review successfully reported';
+    } catch (error) {
+      return error;
+    }
+  },
 }
