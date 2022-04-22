@@ -95,3 +95,20 @@ SELECT
 		WHERE product_id=2
 		GROUP BY rating
 	) AS ratings_count;
+
+-- returns ratings as a json object labeled ratings
+SELECT
+	json_object_agg(ratings_count.rating, ratings_count.count) as ratings
+	FROM (
+		SELECT
+			rating,
+			count
+			FROM (
+				SELECT
+					rating,
+					count(rating) AS count
+				FROM reviews
+				WHERE product_id=2
+				GROUP BY rating
+			) a
+	) as ratings_count;
