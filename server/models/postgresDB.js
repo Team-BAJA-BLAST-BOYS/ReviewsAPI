@@ -19,7 +19,7 @@ module.exports = {
       id,
       product_id,
       rating,
-      to_timestamp(date / 1000),
+      to_timestamp(date / 1000) AS date,
       summary,
       body,
       recommend,
@@ -78,14 +78,50 @@ module.exports = {
             GROUP BY name, characteristic_id, avg
             ORDER BY characteristic_id
           ) as char_averages)) AS metadata;`, [product_id]);
-        return result;
+      return result;
     } catch (error) {
       return error;
     }
   },
-  postReview: async (review) => {
-
-  },
+  postReview: (review) => {
+    const photos = JSON.stringify(review.photos.map((url) => ({ 'url': url })));
+    const queries = Object.entries(review.characteristics).map((characteristic) => {
+        return new Promise((resolve, reject) => {
+          resolve(pool.query(
+            `INSERT INTO characteristics(
+            product_id,
+            characteristic_id,
+            name,
+            value)
+            VALUES(
+              $1,
+              $2,
+              (SELECT name FROM characteristics WHERE characteristic_id=$2 GROUP BY name),
+              $3
+            );`, [review.product_id, characteristic[0], characteristic[1]]));
+        })
+      });
+      queries.push(new Promise((resolve, reject) => {
+        resolve(
+          pool.query(`
+            INSERT INTO reviews(
+              product_id,
+              rating,
+              date,
+              summary,
+              body,
+              recommend,
+              reported,
+              reviewer_name,
+              reviewer_email,
+              helpfulness,
+              photos)
+              VALUES($1, $2, (extract(epoch FROM now()) * 1000)::BIGINT, $3, $4, $5, false, $6, $7, 0, $8);`,
+                  [review.product_id, review.rating, review.summary, review.body, review.recommend, review.name, review.email, photos]));
+      }));
+    const results = Promise.all(queries);
+    return results;
+},
   putHelpful: async (review_id) => {
     try {
       await pool.query(`
@@ -97,15 +133,15 @@ module.exports = {
       return error;
     }
   },
-  putReport: async (review_id) => {
-    try {
-      await pool.query(`
+    putReport: async (review_id) => {
+      try {
+        await pool.query(`
       UPDATE reviews
       SET reported = NOT reported
       WHERE id=$1;`, [review_id]);
-      return 'Review successfully reported';
-    } catch (error) {
-      return error;
-    }
-  },
+        return 'Review successfully reported';
+      } catch (error) {
+        return error;
+      }
+    },
 }

@@ -10,14 +10,15 @@ module.exports = {
     res.send(data.rows[0].metadata);
   },
   postReview: async (req, res) => {
-    res.status(201).end(await psql.postReview(req.body));
+    const result = await psql.postReview(req.body);
+    res.status(201).send(result);
   },
   putHelpful: async (req, res) => {
     const result = await psql.putHelpful(req.params.review_id);
-    res.end(result);
+    res.send(result);
   },
   putReport: async (req, res) => {
     const result = await psql.putReport(req.params.review_id);
-    res.end(result);
+    res.send(result);
   },
 };

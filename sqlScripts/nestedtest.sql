@@ -205,4 +205,3 @@ SELECT
 					GROUP BY name, characteristic_id, avg
           ORDER BY characteristic_id
 				) as char_averages)) AS metadata;
-
