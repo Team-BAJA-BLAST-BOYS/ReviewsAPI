@@ -15,20 +15,6 @@ SELECT product_id, JSON_BUILD_OBJECT(name, JSON_BUILD_OBJECT('id', id, 'value', 
 -- same as above but without the id in the inner object
 SELECT product_id, JSON_BUILD_OBJECT(name, JSON_BUILD_OBJECT('value', (AVG(value)))) AS avg FROM characteristics WHERE product_id=1 GROUP BY name, id, characteristics.product_id ORDER BY product_id;
 
-SELECT product_id,
-JSON_BUILD_OBJECT(name,
-JSON_BUILD_OBJECT('value',
-(SELECT AVG(value)
-AS avg
-FROM characteristics
-WHERE product_id=1
-GROUP BY characteristics.product_id) avg_values))
-AS avg
-FROM characteristics
-WHERE product_id=1
-GROUP BY name, id, characteristics.product_id
-ORDER BY product_id;
-
 -- creates json objects for each row in the table created by the select function
 SELECT
 	product_id,
@@ -36,13 +22,13 @@ SELECT
 		name, json_build_object('value', avg)
 	)
 	FROM (SELECT
-		product_id,
-		name,
-		AVG(value) as avg
-		FROM characteristics
-		WHERE product_id=1
-		GROUP BY name, characteristics.product_id
-		ORDER BY product_id) AS averages
+					product_id,
+					name,
+					AVG(value) as avg
+				FROM characteristics
+				WHERE product_id=1
+				GROUP BY name, characteristics.product_id
+				ORDER BY product_id) AS averages
 	GROUP BY name, product_id, avg;
 
 -- creates json objects for characteristics based on product id

@@ -2,8 +2,13 @@ const psql = require('../models/postgresDB');
 
 module.exports = {
   getReviews: async (req, res) => {
-    const data = await psql.getReviews(req.query.product_id);
-    res.send(data.rows);
+    const data = await psql.getReviews(req.query);
+    console.log(data);
+    res.send({
+      product: req.query.product_id,
+      count: req.query.count,
+      results: data.rows
+    });
   },
   getMeta: async (req, res) => {
     const data = await psql.getMeta(req.query.product_id)

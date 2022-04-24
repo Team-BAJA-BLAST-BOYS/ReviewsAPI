@@ -354,3 +354,5 @@ MigrationBackup/
 
 #the seed data
 sqlScripts/SDC_CSV
+
+.DS_STORE

@@ -13,24 +13,34 @@ const pool = new Pool(credentials);
 pool.connect();
 
 module.exports = {
-  getReviews: async (product_id) => {
-    return await pool.query(`
-    SELECT
-      id,
-      product_id,
-      rating,
-      to_timestamp(date / 1000) AS date,
-      summary,
-      body,
-      recommend,
-      reviewer_name,
-      reviewer_email,
-      response,
-      helpfulness,
-      photos
-    FROM reviews
-    WHERE product_id=$1 AND reported=false
-    ORDER BY id`, [product_id]);
+  getReviews: async (query) => {
+    // const sort = {
+    //   relevance: 'SELECT id, product_id, rating, to_timestamp(date / 1000) AS date, summary, body, recommend, reviewer_name, reviewer_email, response, helpfulness, photos FROM reviews WHERE product_id=$1 AND reported=false ORDER BY helpfulness DESC, date DESC LIMIT $2',
+    //   helpfulness: 'SELECT id, product_id, rating, to_timestamp(date / 1000) AS date, summary, body, recommend, reviewer_name, reviewer_email, response, helpfulness, photos FROM reviews WHERE product_id=$1 AND reported=false ORDER BY helpfulness DESC LIMIT $2',
+    //   newest: 'SELECT id, product_id, rating, to_timestamp(date / 1000) AS date, summary, body, recommend, reviewer_name, reviewer_email, response, helpfulness, photos FROM reviews WHERE product_id=$1 AND reported=false ORDER BY date DESC LIMIT $2'
+    // };
+
+    // const sql = 'SELECT id, product_id, rating, to_timestamp(date / 1000) AS date, summary, body, recommend, reviewer_name, reviewer_email, response, helpfulness, photos FROM reviews WHERE product_id=$1 AND reported=false ORDER BY helpfulness DESC LIMIT $2'
+
+    // const values = [query.product_id, query.count || 5];
+
+    const sort = {
+      relevance: 'helpfulness DESC, date DESC',
+      helpfulness: 'helpfulness DESC',
+      newest: 'date DESC'
+    };
+
+    const queryLiterals = `SELECT id, product_id, rating, to_timestamp(date / 1000) AS date, summary, body, recommend, reviewer_name, reviewer_email, response, helpfulness, photos FROM reviews WHERE product_id=${query.product_id} AND reported=false ORDER BY ${sort[query.sort]} LIMIT ${query.count}`
+
+    try {
+      // const result = await pool.query('SELECT id, product_id, rating, to_timestamp(date / 1000) AS date, summary, body, recommend, reviewer_name, reviewer_email, response, helpfulness, photos FROM reviews WHERE product_id=$1 AND reported=false ORDER BY $2 LIMIT $3', [query.product_id, sort[query.sort], query.count || 5])
+      // const result = await pool.query(sort[query.sort] ,values);
+      // const result = await pool.query(sql, values);
+      const result = await pool.query(queryLiterals);
+      return result;
+    } catch (error) {
+      throw new Error(error);
+    }
   },
   getMeta: async (product_id) => {
     try {
