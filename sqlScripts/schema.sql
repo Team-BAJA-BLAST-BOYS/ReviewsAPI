@@ -1,4 +1,3 @@
-
 DROP DATABASE IF EXISTS reviews;
 CREATE DATABASE reviews;
 
@@ -7,6 +6,24 @@ CREATE DATABASE reviews;
 DROP TABLE IF EXISTS reviews CASCADE;
 
 CREATE TABLE reviews (
+  id SERIAL NOT NULL UNIQUE,
+  product_id INTEGER NOT NULL,
+  rating INTEGER NOT NULL,
+  date BIGINT NOT NULL,
+  summary VARCHAR(255) NULL,
+  body VARCHAR(1000) NOT NULL,
+  recommend BOOLEAN NOT NULL,
+  reported BOOLEAN NOT NULL,
+  reviewer_name VARCHAR(255) NOT NULL,
+  reviewer_email VARCHAR(255) NOT NULL,
+  response VARCHAR(1000) NULL,
+  helpfulness INTEGER NOT NULL,
+  PRIMARY KEY (id)
+);
+
+DROP TABLE IF EXISTS rev_temp;
+
+CREATE TEMPORARY TABLE rev_temp (
   id SERIAL NOT NULL UNIQUE,
   product_id INTEGER NOT NULL,
   rating INTEGER NOT NULL,
@@ -36,6 +53,10 @@ CREATE TABLE characteristics_csv (
   PRIMARY KEY (id)
 );
 
+-- speeds up the later combination script
+CREATE INDEX idx_c_temp_prod_id ON characteristics_csv(product_id);
+CREATE INDEX idx_c_temp_name ON characteristics_csv(name);
+
 -- ---
 -- Table 'Characteristics-Reviews'
 --
@@ -50,6 +71,9 @@ CREATE TABLE characteristics_reviews (
   value INTEGER NOT NULL,
   PRIMARY KEY (id)
 );
+
+-- speeds up the later combination script
+CREATE INDEX idx_cr_temp_c_id ON characteristics_reviews(characteristic_id);
 
 -- ---
 -- Table 'Photos'
@@ -72,7 +96,7 @@ CREATE TABLE characteristics (
   product_id INTEGER NOT NULL,
   characteristic_id INTEGER NOT NULL,
   name VARCHAR(255) NOT NULL,
-  value INTEGER NOT NULL,
+  value INTEGER,
   PRIMARY KEY (id)
 );
 

@@ -1,29 +1,22 @@
-const validateParams = (query) => {
-  const sortPossible = ['helpfulness', 'newest', 'relevence'];
+const errorObj = (param) => ({
+  status: 400,
+  text: `Error: invalid ${param} provided`,
+});
 
-  if (!query.product_id || isNaN(query.product_id)) {
-    return {
-      status: 422,
-      text: 'Error: invalid product_id provided',
-    };
+const validateParams = (query) => {
+  const sortPossible = ['helpfulness', 'newest', 'relevance'];
+
+  if (!query.product_id || Number.isNaN(Number(query.product_id))) {
+    return errorObj('product_id');
   }
-  if (query.count && isNaN(query.count)) {
-    return {
-      status: 422,
-      text: 'Error: invalid count provided',
-    };
+  if (query.count && Number.isNaN(Number(query.count))) {
+    return errorObj('count');
   }
   if (query.sort && !sortPossible.includes(query.sort)) {
-    return {
-      status: 422,
-      text: 'Error: invalid sort provided',
-    };
+    return errorObj('sort');
   }
-  if (query.page && (isNaN(query.page) || query.page < 0)) {
-    return {
-      status: 422,
-      text: 'Error: invalid page provided',
-    };
+  if (query.page && (Number.isNaN(Number(query.page)) || query.page <= 0)) {
+    return errorObj('page');
   }
   return { status: 200 };
 };

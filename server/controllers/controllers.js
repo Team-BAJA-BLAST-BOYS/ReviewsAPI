@@ -1,5 +1,7 @@
 const psql = require('../models/postgresDB');
 const validateParams = require('./validation/validateParams');
+const validateReviewId = require('./validation/validatePutParams');
+const validatePostBody = require('./validation/validatePostBody');
 
 module.exports = {
   getReviews: async (req, res) => {
@@ -9,7 +11,7 @@ module.exports = {
       const sort = {
         relevance: 'helpfulness DESC, date DESC',
         helpfulness: 'helpfulness DESC',
-        newest: 'date DESC'
+        newest: 'date DESC',
       };
 
       const query = {
@@ -17,29 +19,48 @@ module.exports = {
         order: sort[req.query.sort] || sort.relevance,
         limit: req.query.count || 5,
         offset: ((req.query.count * req.query.page) - req.query.count) || 0,
-        page: req.query.page
-      }
+        page: req.query.page,
+      };
 
-      const data = await psql.getReviews(query);
-      res.send(data);
+      const result = await psql.getReviews(query);
+      res.send(result);
     }
 
     res.status(validate.status).send(validate.text);
   },
   getMeta: async (req, res) => {
-    const data = await psql.getMeta(req.query.product_id)
-    res.send(data.rows[0].metadata);
+    const validate = validateParams(req.query);
+    if (validate.status === 200) {
+      const result = await psql.getMeta(req.query.product_id);
+      res.send({
+        product_id: Number(req.query.product_id),
+        ...result,
+      });
+    }
+    res.status(validate.status).send(validate.text);
   },
   postReview: async (req, res) => {
-    const result = await psql.postReview(req.body);
-    res.status(201).send(result);
+    const validate = validatePostBody.postBody(req.body);
+    if (validate.status === 201) {
+      await psql.postReview(req.body);
+      res.status(201).send('Successful Post');
+    }
+    res.status(validate.status).send(validate.text);
   },
   putHelpful: async (req, res) => {
-    const result = await psql.putHelpful(req.params.review_id);
-    res.send(result);
+    const validate = validateReviewId(req.params.review_id);
+    if (validate.status === 200) {
+      await psql.putHelpful(req.params.review_id);
+      res.send(`Successful increment of helpfulness for review #${req.params.review_id}`);
+    }
+    res.status(validate.status).send(validate.text);
   },
   putReport: async (req, res) => {
-    const result = await psql.putReport(req.params.review_id);
-    res.send(result);
+    const validate = validateReviewId(req.params.review_id);
+    if (validate.status === 200) {
+      await psql.putReport(req.params.review_id);
+      res.send(`Successfully changed reported status of review #${req.params.review_id}`);
+    }
+    res.status(validate.status).send(validate.text);
   },
 };

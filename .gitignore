@@ -356,3 +356,5 @@ MigrationBackup/
 sqlScripts/SDC_CSV
 
 .DS_STORE
+
+.eslintrc.js
