@@ -1,6 +1,6 @@
-CREATE DATABASE reviews;
+CREATE DATABASE reviews2;
 
-\c reviews
+\c reviews2
 
 CREATE TABLE reviews (
   id SERIAL NOT NULL UNIQUE,
@@ -90,6 +90,8 @@ INSERT INTO reviews (product_id, rating, date, summary, body, recommend, reporte
 SELECT product_id, rating, date, summary, body, recommend, reported, reviewer_name, reviewer_email, response, helpfulness
 FROM rev_temp;
 
+DROP TABLE rev_temp;
+
 \copy photos FROM './SDC_CSV/reviews_photos.csv' WITH (FORMAT CSV, HEADER);
 
 \copy characteristics_csv FROM './SDC_CSV/characteristics.csv' WITH (FORMAT CSV, HEADER);
@@ -117,6 +119,8 @@ FROM (
   GROUP BY review_id) combined_photos
 WHERE reviews.id = combined_photos.review_id;
 
+DROP TABLE photos;
+
 -- ---
 -- Combines the two characteristics tables into one
 --
@@ -133,15 +137,13 @@ LEFT JOIN characteristics_reviews t
 ON x.characteristic_id = t.characteristic_id
 ORDER BY x.product_id;
 
---adds a serial id column to the characteristics table
-ALTER TABLE characteristics ADD COLUMN id SERIAL PRIMARY KEY;
+-- --adds a serial id column to the characteristics table
+-- ALTER TABLE characteristics ADD COLUMN id SERIAL PRIMARY KEY;
 
 -- add indexes to the characteristics table
 CREATE INDEX idx_chara_prod_id ON characteristics(product_id);
 CREATE INDEX idx_chara_name ON characteristics(name);
 CREATE INDEX idx_chara_id ON characteristics(characteristic_id);
 
-DROP TABLE rev_temp;
-DROP TABLE photos;
 DROP TABLE characteristics_csv CASCADE;
 DROP TABLE characteristics_reviews CASCADE;

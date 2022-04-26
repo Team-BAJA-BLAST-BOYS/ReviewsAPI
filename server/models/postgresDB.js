@@ -1,11 +1,12 @@
+require('dotenv').config();
 const { Pool } = require('pg');
 const format = require('pg-format');
 
 const credentials = {
-  user: 'postgres',
+  user: process.env.pg_user,
   host: 'localhost',
   database: 'reviews',
-  password: '',
+  password: process.env.pg_pass,
   port: 5432,
 };
 
@@ -45,7 +46,7 @@ module.exports = {
         results: result.rows,
       };
     } catch (error) {
-      throw new Error(error);
+      return Error(error);
     }
   },
   getMeta: async (productId) => {

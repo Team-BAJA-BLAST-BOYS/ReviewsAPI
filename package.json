@@ -2,10 +2,10 @@
   "name": "reviewsapi",
   "version": "1.0.0",
   "description": "reviews api for SDC",
-  "main": "index.js",
+  "main": "server.js",
   "scripts": {
-    "test": "test",
-    "start": "nodemon server/index.js"
+    "test": "NODE_OPTIONS=--experimental-vm-modules npx jest --coverage --verbose --forceExit",
+    "start": "nodemon server/server.js"
   },
   "repository": {
     "type": "git",

@@ -361,3 +361,8 @@ sqlScripts/SDC_CSV
 
 # coverage folder
 coverage/
+
+*.pem
+sqlScripts.zip
+reviews
+reviews.zip
