@@ -1,0 +1,36 @@
+{
+  "name": "reviewsapi",
+  "version": "1.0.0",
+  "description": "reviews api for SDC",
+  "main": "server.js",
+  "scripts": {
+    "test": "NODE_OPTIONS=--experimental-vm-modules npx jest --coverage --verbose --forceExit",
+    "start": "nodemon server/server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Team-BAJA-BLAST-BOYS/ReviewsAPI.git"
+  },
+  "author": "Danny Wong",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Team-BAJA-BLAST-BOYS/ReviewsAPI/issues"
+  },
+  "homepage": "https://github.com/Team-BAJA-BLAST-BOYS/ReviewsAPI#readme",
+  "dependencies": {
+    "dotenv": "^16.0.0",
+    "express": "^4.17.3",
+    "express-promise-router": "^4.1.1",
+    "mongoose": "^6.3.0",
+    "pg": "^8.7.3",
+    "pg-format": "^1.0.4",
+    "prettier-eslint": "^14.0.1"
+  },
+  "devDependencies": {
+    "eslint": "^8.14.0",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-plugin-import": "^2.26.0",
+    "jest": "^27.5.1",
+    "supertest": "^6.2.2"
+  }
+}

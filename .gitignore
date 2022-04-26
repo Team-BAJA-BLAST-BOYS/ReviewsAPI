@@ -348,3 +348,21 @@ MigrationBackup/
 
 # Ionide (cross platform F# VS Code tools) working folder
 .ionide/
+
+# the enviornment object
+.env
+
+#the seed data
+sqlScripts/SDC_CSV
+
+.DS_STORE
+
+.eslintrc.js
+
+# coverage folder
+coverage/
+
+*.pem
+sqlScripts.zip
+reviews
+reviews.zip
