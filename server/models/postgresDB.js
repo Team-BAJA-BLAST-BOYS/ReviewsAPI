@@ -4,7 +4,7 @@ const format = require('pg-format');
 
 const credentials = {
   user: process.env.pg_user,
-  host: 'localhost',
+  host: process.env.pg_host,
   database: 'reviews',
   password: process.env.pg_pass,
   port: 5432,
@@ -144,7 +144,11 @@ module.exports = {
         .then((result) => resolve(result))
         .catch((err) => reject(err));
     }));
-    const results = Promise.all(queries);
+    let results;
+    Promise.all(queries)
+      .then((data) => { results = data; })
+      .catch((err) => new Error(err));
+    // const results = Promise.all(queries);
     return results;
   },
   putHelpful: async (reviewId) => {
