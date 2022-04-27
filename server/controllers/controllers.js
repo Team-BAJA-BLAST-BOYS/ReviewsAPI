@@ -22,8 +22,12 @@ module.exports = {
         page: req.query.page,
       };
 
-      const result = await psql.getReviews(query);
-      res.send(result);
+      try {
+        const result = await psql.getReviews(query);
+        res.send(result);
+      } catch (err) {
+        res.status(500).send(err);
+      }
     }
 
     res.status(validate.status).send(validate.text);
@@ -31,35 +35,51 @@ module.exports = {
   getMeta: async (req, res) => {
     const validate = validateParams(req.query);
     if (validate.status === 200) {
-      const result = await psql.getMeta(req.query.product_id);
-      res.send({
-        product_id: Number(req.query.product_id),
-        ...result,
-      });
+      try {
+        const result = await psql.getMeta(req.query.product_id);
+        res.send({
+          product_id: Number(req.query.product_id),
+          ...result,
+        });
+      } catch (err) {
+        res.status(500).send(err);
+      }
     }
     res.status(validate.status).send(validate.text);
   },
   postReview: async (req, res) => {
     const validate = validatePostBody.postBody(req.body);
     if (validate.status === 201) {
-      await psql.postReview(req.body);
-      res.status(201).send('Successful Post');
+      try {
+        await psql.postReview(req.body);
+        res.status(201).send('Successful Post');
+      } catch (err) {
+        res.status(500).send(err);
+      }
     }
     res.status(validate.status).send(validate.text);
   },
   putHelpful: async (req, res) => {
     const validate = validateReviewId(req.params.review_id);
     if (validate.status === 200) {
-      await psql.putHelpful(req.params.review_id);
-      res.send(`Successful increment of helpfulness for review #${req.params.review_id}`);
+      try {
+        await psql.putHelpful(req.params.review_id);
+        res.send(`Successful increment of helpfulness for review #${req.params.review_id}`);
+      } catch (err) {
+        res.status(500).send(err);
+      }
     }
     res.status(validate.status).send(validate.text);
   },
   putReport: async (req, res) => {
     const validate = validateReviewId(req.params.review_id);
     if (validate.status === 200) {
-      await psql.putReport(req.params.review_id);
-      res.send(`Successfully changed reported status of review #${req.params.review_id}`);
+      try {
+        await psql.putReport(req.params.review_id);
+        res.send(`Successfully changed reported status of review #${req.params.review_id}`);
+      } catch (err) {
+        res.status(500).send(err);
+      }
     }
     res.status(validate.status).send(validate.text);
   },
