@@ -7,12 +7,6 @@
   <img src="https://img.shields.io/badge/react-%2320232a.svg?style=for-the-badge&logo=react&logoColor=%2361DAFB" />
 </div>
 
-<h1 align="center">Threads</h1>
-
-<div align="center" width="100%">
-    <img src="src/images/readme/iron-motorcycles.png">
-</div>
-
 <h4 align="center">A System Design creation and a recreation of a existing API.</h4>
 
 ## Features
@@ -20,7 +14,9 @@ PostgreSQL scripts to ETL CSV data into a database.
 A fully functioning server that is able to query the database for information and egress it in a format that would suit the needs of the front end client with response times under 70ms and being able to serve up to 1000 clients on its fastest route. 
 
 ## Motivation and Story
-After we built out the front end to this eCommerce site, we were given the task to recreate the API that provided the product data to us. Originally the API that we had been using responded with queries that took over 1000ms and would be rate limited to only a couple requests per second. Our takes was to reduce the latency of response times as well as increase the request limit by building the API from the ground up with optimizatons in mind. The minimum goals were to be able to serve 100 requests per second at under 2000ms per request.   
+After we built out the front end to this mock eCommerce site, we were given the task to recreate the API that provided the product data to us. Originally the API that we had been using responded with queries that took over 1000ms and would be rate limited to only a couple requests per second causing our pages to load extremely slowly or in some cases even crash. 
+
+Our task was to reduce the latency of response times as well as increase the request limit by building the API from the ground up with optimizatons in mind. The minimum goals were to be able to serve 100 requests per second at under 2000ms per request.   
   
 I ended up being able to hit those goals and exceed them. My fastest queries ended up being around 64ms serving well up to 1000 requests per second with the help of load balancing and horizontally scaling my API.   
   
