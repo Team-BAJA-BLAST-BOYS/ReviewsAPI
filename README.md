@@ -66,5 +66,3 @@ In order to understand how supertest is testing responses from the sever, feel f
 In order to run tests, run the following command within terminal.
 
 `$ npm run test`
-
-<p align="center">Project extended by <a href="https://github.com/ec-rilo">Danny Wong</a></p>
