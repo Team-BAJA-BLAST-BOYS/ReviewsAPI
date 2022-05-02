@@ -37,7 +37,7 @@ This project follows the [Airbnb JavaScript Style Guide](https://github.com/airb
 - [AWS](https://aws.amazon.com/)
 
 ## Repository Installation 
-`$ git clone https://github.com/Team-BAJA-BLAST-BOYS/ReviewsAPI.git
+`$ git clone https://github.com/Team-BAJA-BLAST-BOYS/ReviewsAPI.git`
 
 Once in the repository make sure to install the required packages.
 
